@@ -16,14 +16,15 @@ env:
 
 stages:
   - Build imgsync
-  - Sync Kubeadm
-  - Sync Flannel
-  - Sync Helm
-  - Sync Istio
-  - Sync Distroless
-  - Sync Samples
-  - Sync Linkerd
-  - Sync Spinnaker
+  - Sync Knative
+#   - Sync Kubeadm
+#   - Sync Flannel
+#   - Sync Helm
+#   - Sync Istio
+#   - Sync Distroless
+#   - Sync Samples
+#   - Sync Linkerd
+#   - Sync Spinnaker
 
 before_script:
   - bash .travis-before.sh
@@ -33,6 +34,9 @@ jobs:
     - stage: Build imgsync
       script:
         - make install
+    - stage: Sync Knative
+      script:
+        - imgsync gcr --namespace knative-release --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
     - stage: Sync Kubeadm
       script:
         - imgsync gcr --kubeadm --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
