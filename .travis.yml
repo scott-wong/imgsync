@@ -39,7 +39,12 @@ jobs:
     - name: Sync Knative
       stage: Sync Knative
       script:
-        - imgsync gcr --namespace knative-releases/knative.dev/serving --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+        - imgsync gcr --namespace knative-releases/knative.dev/serving/cmd --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+        - imgsync gcr --namespace knative-releases/knative.dev/serving/cmd/networking --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+#         - imgsync gcr --namespace knative-releases/knative.dev/eventing/cmd --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+        - imgsync gcr --namespace knative-releases/knative.dev/eventing/cmd/ping --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+        - imgsync gcr --namespace knative-releases/knative.dev/net-istio/cmd --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+
     # - name: Sync Kubeadm
     #   stage: Sync Kubeadm
     #   script:
