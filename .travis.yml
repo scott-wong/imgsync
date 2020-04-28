@@ -31,37 +31,50 @@ before_script:
 
 jobs:
   include:
-    - stage: Build imgsync
+    - name: Build imgsync
+      stage: Build imgsync
       script:
         - make install
-    - stage: Sync Knative
+        # - go get -u github.com/gozap/msgsend
+    - name: Sync Knative
+      stage: Sync Knative
       script:
-        - imgsync gcr --namespace knative-release --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Kubeadm
-#       script:
-#         - imgsync gcr --kubeadm --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Flannel
-#       script:
-#         - imgsync flannel --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Helm
-#       script:
-#         - imgsync gcr --namespace kubernetes-helm --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Istio
-#       script:
-#         - imgsync gcr --namespace istio-release --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Distroless
-#       script:
-#         - imgsync gcr --namespace distroless --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Samples
-#       script:
-#         - imgsync gcr --namespace google-samples --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Linkerd
-#       script:
-#         - imgsync gcr --namespace linkerd-io --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
-#     - stage: Sync Spinnaker
-#       script:
-#         - imgsync gcr --namespace spinnaker-marketplace --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+        - imgsync gcr --namespace knative-releases/knative.dev/eventing/cmd/in_memory --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests
+    # - name: Sync Kubeadm
+    #   stage: Sync Kubeadm
+    #   script:
+    #     - imgsync gcr --kubeadm --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
+    # - name: Sync Flannel
+    #   stage: Sync Flannel
+    #   script:
+    #     - imgsync flannel --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
+    # - name: Sync Helm
+    #   stage: Sync Helm
+    #   script:
+    #     - imgsync gcr --namespace kubernetes-helm --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
+    # - name: Sync Istio
+    #   stage: Sync Istio
+    #   script:
+    #     - imgsync gcr --namespace istio-release --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
+    # - name: Sync Distroless
+    #   stage: Sync Distroless
+    #   script:
+    #     - imgsync gcr --namespace distroless --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
+    # - name: Sync Samples
+    #   stage: Sync Samples
+    #   script:
+    #     - imgsync gcr --namespace google-samples --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
+    # - name: Sync Linkerd
+    #   stage: Sync Linkerd
+    #   script:
+    #     - imgsync gcr --namespace linkerd-io --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
+    # - name: Sync Spinnaker
+    #   stage: Sync Spinnaker
+    #   script:
+    #     - imgsync gcr --namespace spinnaker-marketplace --user ${DOCKER_USER} --password ${DOCKER_PASSWORD} --process-limit 30 --manifests ${GCR_REPO}/manifests --report
 
+after_failure:
+  - bash .travis-after-failure.sh
 
 after_success:
-  - bash .travis-after.sh
+  - bash .travis-after-success.sh
